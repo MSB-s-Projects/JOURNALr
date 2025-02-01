@@ -14,7 +14,7 @@ import java.util.Map;
 @RequestMapping("/journal")
 @AllArgsConstructor
 public class JournalEntryController {
-    final JournalEntryService journalEntryService;
+    JournalEntryService journalEntryService;
 
     @GetMapping
     public ResponseEntity<?> getJournalEntries() {
