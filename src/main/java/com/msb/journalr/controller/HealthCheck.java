@@ -1,6 +1,6 @@
 package com.msb.journalr.controller;
 
-import com.msb.journalr.util.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +11,7 @@ import java.util.Map;
 @RequestMapping("health-check")
 public class HealthCheck {
     @GetMapping
-    public Response checkHealth() {
-        return new Response(Map.of("health", "ok"));
+    public ResponseEntity<?> checkHealth() {
+        return ResponseEntity.ok(Map.of("health", "ok"));
     }
 }
