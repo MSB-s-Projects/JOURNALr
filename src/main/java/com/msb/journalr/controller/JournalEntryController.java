@@ -1,44 +1,55 @@
 package com.msb.journalr.controller;
 
 import com.msb.journalr.entity.JournalEntry;
+import com.msb.journalr.service.JournalEntryService;
 import com.msb.journalr.util.Response;
+import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/journal")
 public class JournalEntryController {
-    Map<Long, JournalEntry> journalEntries = new HashMap<>();
+    final JournalEntryService journalEntryService;
+
+    public JournalEntryController(JournalEntryService journalEntryService) {
+        this.journalEntryService = journalEntryService;
+    }
 
     @GetMapping
     public List<JournalEntry> getJournalEntries() {
-        return new ArrayList<>(journalEntries.values());
+        return journalEntryService.getAll();
     }
 
     @PostMapping
     public Response createJournalEntry(@RequestBody JournalEntry journalEntry) {
-        journalEntries.put(journalEntry.getId(), journalEntry);
-        return new Response(Map.of("message", "Entry created successfully."));
+        ObjectId id = journalEntryService.addEntry(journalEntry);
+        if (id == null) {
+            return new Response(Map.of("message", "An Error occurred while creating JournalEntry."));
+        }
+        return new Response(Map.of("message", "Entry created successfully.", "id", id.toString()));
     }
 
     @GetMapping("/{id}")
-    public JournalEntry getJournalEntryById(@PathVariable Long id) {
-        return journalEntries.get(id);
+    public JournalEntry getJournalEntryById(@PathVariable ObjectId id) {
+        return journalEntryService.getById(id).orElse(null);
     }
 
     @PutMapping("/{id}")
-    public Response updateJournalEntry(@PathVariable Long id, @RequestBody JournalEntry newJournalEntry) {
-        journalEntries.put(id, newJournalEntry);
-        return new Response(Map.of("message", "Entry updated successfully."));
+    public Response updateJournalEntry(@PathVariable ObjectId id, @RequestBody JournalEntry newJournalEntry) {
+        if (journalEntryService.update(id, newJournalEntry)) {
+            return new Response(Map.of("message", "Entry updated successfully."));
+        }
+        return new Response(Map.of("message", "failed to update JournalEntry for id:" + id.toString()));
     }
 
     @DeleteMapping("/{id}")
-    public Response deleteJournalEntry(@PathVariable Long id) {
-        journalEntries.remove(id);
-        return new Response(Map.of("message", "JournalEntry with id:" + id + " deleted successfully."));
+    public Response deleteJournalEntry(@PathVariable ObjectId id) {
+        if (journalEntryService.delete(id)) {
+            return new Response(Map.of("message", "JournalEntry with id:" + id + " deleted successfully."));
+        }
+        return new Response(Map.of("message", "Error while deleting JournalEntry with id:" + id.toString()));
     }
 }
