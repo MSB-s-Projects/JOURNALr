@@ -2,9 +2,9 @@ package com.msb.journalr.service;
 
 import com.msb.journalr.entity.JournalEntry;
 import com.msb.journalr.repository.JournalEntryRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
+@AllArgsConstructor
 public class JournalEntryService {
-    private static final Logger log = LoggerFactory.getLogger(JournalEntryService.class);
     JournalEntryRepository journalEntryRepository;
-
-    public JournalEntryService(JournalEntryRepository journalEntryRepository) {
-        this.journalEntryRepository = journalEntryRepository;
-    }
 
     public List<JournalEntry> getAll() {
         return journalEntryRepository.findAll();
@@ -45,6 +42,7 @@ public class JournalEntryService {
     public boolean update(ObjectId id, JournalEntry newEntry) {
         var journalEntry = getById(id).orElse(null);
         if (journalEntry == null) {
+            log.error("Error while updating JournalEntry id:{} : NOT FOUND", id.toString());
             return false;
         }
         journalEntry.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isBlank() ? newEntry.getTitle() :

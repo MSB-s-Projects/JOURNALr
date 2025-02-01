@@ -2,6 +2,7 @@ package com.msb.journalr.controller;
 
 import com.msb.journalr.entity.JournalEntry;
 import com.msb.journalr.service.JournalEntryService;
+import lombok.AllArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/journal")
+@AllArgsConstructor
 public class JournalEntryController {
     final JournalEntryService journalEntryService;
-
-    public JournalEntryController(JournalEntryService journalEntryService) {
-        this.journalEntryService = journalEntryService;
-    }
 
     @GetMapping
     public ResponseEntity<?> getJournalEntries() {
