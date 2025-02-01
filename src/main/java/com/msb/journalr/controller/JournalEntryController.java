@@ -1,6 +1,7 @@
 package com.msb.journalr.controller;
 
 import com.msb.journalr.entity.JournalEntry;
+import com.msb.journalr.util.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,11 +20,9 @@ public class JournalEntryController {
     }
 
     @PostMapping
-    public Map<String, String> createJournalEntry(@RequestBody JournalEntry journalEntry) {
+    public Response createJournalEntry(@RequestBody JournalEntry journalEntry) {
         journalEntries.put(journalEntry.getId(), journalEntry);
-        Map<String, String> res = new HashMap<>();
-        res.put("message", "Entry created successfully.");
-        return res;
+        return new Response(Map.of("message", "Entry created successfully."));
     }
 
     @GetMapping("/{id}")
@@ -32,18 +31,14 @@ public class JournalEntryController {
     }
 
     @PutMapping("/{id}")
-    public Map<String, String> updateJournalEntry(@PathVariable Long id, @RequestBody JournalEntry newJournalEntry) {
+    public Response updateJournalEntry(@PathVariable Long id, @RequestBody JournalEntry newJournalEntry) {
         journalEntries.put(id, newJournalEntry);
-        var res = new HashMap<String, String>();
-        res.put("message", "Entry updated successfully.");
-        return res;
+        return new Response(Map.of("message", "Entry updated successfully."));
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, String> deleteJournalEntry(@PathVariable Long id) {
+    public Response deleteJournalEntry(@PathVariable Long id) {
         journalEntries.remove(id);
-        var res = new HashMap<String, String>();
-        res.put("message", "JournalEntry with id:" + id + " deleted successfully.");
-        return res;
+        return new Response(Map.of("message", "JournalEntry with id:" + id + " deleted successfully."));
     }
 }
