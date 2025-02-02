@@ -7,4 +7,4 @@ spring:
 
 api:
   documentation:
-    url: "http://localhost:8080/journal"
+    url: ${BASE_URL}
