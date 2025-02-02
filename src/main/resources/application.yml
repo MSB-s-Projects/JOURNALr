@@ -3,6 +3,4 @@ spring:
     name: JOURNALr
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: journalDB
+      uri: ${MONGO_URL}
