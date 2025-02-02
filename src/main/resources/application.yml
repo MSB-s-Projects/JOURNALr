@@ -4,3 +4,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URL}
+
+api:
+  documentation:
+    url: "http://localhost:8080/journal"
